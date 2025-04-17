@@ -1,8 +1,9 @@
 
 import { BrowserRouter as Router } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AppRoutes } from './components/AppRoutes'
+import AppRoutes from './components/AppRoutes'
 import { AuthProvider } from './contexts/AuthContext'
+import { Toaster } from './components/ui/sonner'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,7 @@ function App() {
       <Router>
         <AuthProvider>
           <AppRoutes />
+          <Toaster position="top-right" />
         </AuthProvider>
       </Router>
     </QueryClientProvider>
