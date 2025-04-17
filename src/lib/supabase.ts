@@ -1,5 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js'
+import { toast } from 'sonner'
 
 const supabaseUrl = 'https://iuipvfffsxxtrteectim.supabase.co'
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1aXB2ZmZmc3h4dHJ0ZWVjdGltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4MzU1MTcsImV4cCI6MjA2MDQxMTUxN30.b2n10AbhMm-12H9t72VFJCg_MtLDglwj2WhUBPnkyv4'
@@ -8,6 +9,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce',
   },
   db: {
     schema: 'public',
@@ -87,9 +90,12 @@ export const db = {
 
     async create(contact: Omit<Contact, 'id' | 'created_at' | 'updated_at' | 'user_id'>) {
       try {
+        const { data: userData } = await supabase.auth.getUser()
+        if (!userData.user) throw new DatabaseError('User not authenticated')
+        
         const { data, error } = await supabase
           .from('contacts')
-          .insert([contact])
+          .insert([{ ...contact, user_id: userData.user.id }])
           .select()
         
         if (error) throw new DatabaseError('Failed to create contact', error)
@@ -166,9 +172,12 @@ export const db = {
 
     async create(activity: Omit<Activity, 'id' | 'created_at'>) {
       try {
+        const { data: userData } = await supabase.auth.getUser()
+        if (!userData.user) throw new DatabaseError('User not authenticated')
+        
         const { data, error } = await supabase
           .from('activities')
-          .insert([activity])
+          .insert([{ ...activity, user_id: userData.user.id }])
           .select()
         
         if (error) throw new DatabaseError('Failed to create activity', error)
@@ -198,9 +207,12 @@ export const db = {
 
     async create(tag: Omit<Tag, 'id' | 'created_at'>) {
       try {
+        const { data: userData } = await supabase.auth.getUser()
+        if (!userData.user) throw new DatabaseError('User not authenticated')
+        
         const { data, error } = await supabase
           .from('tags')
-          .insert([tag])
+          .insert([{ ...tag, user_id: userData.user.id }])
           .select()
         
         if (error) throw new DatabaseError('Failed to create tag', error)

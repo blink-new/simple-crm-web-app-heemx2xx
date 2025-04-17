@@ -1,49 +1,47 @@
 
 import { ReactNode } from 'react';
-import { Database } from 'lucide-react';
-import { motion } from 'framer-motion';
 
-type AuthLayoutProps = {
+interface AuthLayoutProps {
   children: ReactNode;
-};
+}
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center bg-gradient-to-r from-indigo-500 to-purple-600 py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <motion.div 
-          className="flex justify-center"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="bg-primary text-white p-3 rounded-full">
-            <Database className="h-10 w-10" />
+        <div className="flex justify-center">
+          <div className="h-16 w-16 rounded-full bg-white p-3 shadow-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-full w-full text-indigo-600"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
           </div>
-        </motion.div>
-        <motion.h2 
-          className="mt-6 text-center text-3xl font-extrabold text-gray-900"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-        >
-          SimpleCRM
-        </motion.h2>
+        </div>
+        <h1 className="mt-4 text-center text-3xl font-extrabold text-white">
+          Simple CRM
+        </h1>
       </div>
 
-      <motion.div 
-        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white px-4 py-8 shadow-xl sm:rounded-lg sm:px-10">
           {children}
         </div>
-        <p className="mt-4 text-center text-sm text-gray-600">
-          A simple CRM application for managing contacts and interactions
-        </p>
-      </motion.div>
+      </div>
+      
+      <div className="mt-8 text-center text-sm text-white opacity-80">
+        &copy; {new Date().getFullYear()} Simple CRM. All rights reserved.
+      </div>
     </div>
   );
 }

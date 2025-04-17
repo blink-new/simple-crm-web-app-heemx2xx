@@ -7,12 +7,14 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { toast } from 'sonner';
 import AuthLayout from '../../components/layout/AuthLayout';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import { AlertCircle, Mail } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, isEmailConfirmed } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,12 +28,29 @@ export default function LoginPage() {
     
     try {
       await signIn(email, password);
-      toast.success('Logged in successfully');
-    } catch (error) {
+      if (isEmailConfirmed) {
+        toast.success('Logged in successfully');
+      }
+    } catch (error: any) {
       console.error('Login error:', error);
-      toast.error('Failed to log in. Please check your credentials.');
+      toast.error(error.message || 'Failed to log in. Please check your credentials.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+      
+      if (error) throw error;
+      toast.success('Confirmation email resent. Please check your inbox.');
+    } catch (error: any) {
+      console.error('Error resending confirmation:', error);
+      toast.error(error.message || 'Failed to resend confirmation email.');
     }
   };
 
@@ -42,6 +61,24 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Sign in to your account
           </h2>
+          
+          {!isEmailConfirmed && email && (
+            <Alert variant="destructive" className="mb-6 bg-red-50 border-red-200">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="flex flex-col gap-2">
+                <p>Please confirm your email address before signing in.</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full sm:w-auto flex items-center gap-2"
+                  onClick={handleResendConfirmation}
+                >
+                  <Mail className="h-4 w-4" />
+                  Resend confirmation email
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
           
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -86,7 +123,7 @@ export default function LoginPage() {
             <div>
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-200"
                 disabled={isLoading}
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
