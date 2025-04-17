@@ -69,7 +69,8 @@
     "@headlessui/react": "latest",
     "tailwindcss": "latest",
     "postcss": "latest",
-    "autoprefixer": "latest"
+    "autoprefixer": "latest",
+    "@supabase/auth-helpers-react": "latest"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
