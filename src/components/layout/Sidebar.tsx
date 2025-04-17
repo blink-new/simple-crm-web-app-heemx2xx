@@ -9,6 +9,7 @@ import {
   X,
   Database
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 type SidebarProps = {
   open: boolean;
@@ -30,7 +31,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Mobile sidebar overlay */}
       {open && (
         <div 
-          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setOpen(false)}
         />
       )}
@@ -65,7 +66,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "group flex items-center px-2 py-2 text-base font-medium rounded-md transition-colors",
+                  "group flex items-center px-3 py-2 text-base font-medium rounded-md transition-colors",
                   isActive
                     ? "bg-primary text-white"
                     : "text-gray-600 hover:bg-gray-100"
@@ -104,16 +105,25 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       key={item.name}
                       to={item.href}
                       className={cn(
-                        "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors",
+                        "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all relative",
                         isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-600 hover:bg-gray-100"
+                          ? "text-primary"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                       )}
                     >
+                      {isActive && (
+                        <motion.div
+                          layoutId="sidebar-indicator"
+                          className="absolute left-0 w-1 h-full bg-primary rounded-r-full"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.2 }}
+                        />
+                      )}
                       <item.icon
                         className={cn(
                           "mr-3 h-5 w-5 transition-colors",
-                          isActive ? "text-white" : "text-gray-500 group-hover:text-gray-600"
+                          isActive ? "text-primary" : "text-gray-400 group-hover:text-gray-500"
                         )}
                       />
                       {item.name}
