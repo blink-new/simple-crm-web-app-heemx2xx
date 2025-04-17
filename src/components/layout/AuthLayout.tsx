@@ -1,53 +1,49 @@
 
-import { ReactNode, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { ReactNode } from 'react';
 import { Database } from 'lucide-react';
-import { Toaster } from 'sonner';
+import { motion } from 'framer-motion';
 
 type AuthLayoutProps = {
   children: ReactNode;
 };
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/');
-    }
-  }, [user, loading, navigate]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="flex justify-center">
-            <div className="flex items-center">
-              <Database className="h-10 w-10 text-primary" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">SimpleCRM</span>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <motion.div 
+          className="flex justify-center"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="bg-primary text-white p-3 rounded-full">
+            <Database className="h-10 w-10" />
           </div>
+        </motion.div>
+        <motion.h2 
+          className="mt-6 text-center text-3xl font-extrabold text-gray-900"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+        >
+          SimpleCRM
+        </motion.h2>
+      </div>
+
+      <motion.div 
+        className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {children}
         </div>
-      </div>
-      <div className="hidden lg:block relative w-0 flex-1">
-        <img
-          className="absolute inset-0 h-full w-full object-cover"
-          src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80"
-          alt="Office workspace"
-        />
-      </div>
-      <Toaster position="top-right" />
+        <p className="mt-4 text-center text-sm text-gray-600">
+          A simple CRM application for managing contacts and interactions
+        </p>
+      </motion.div>
     </div>
   );
 }
